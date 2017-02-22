@@ -21,5 +21,7 @@ sess.run(init)
 for i in range(1000):
     sess.run(train, feed_dict={x: x_train, y: y_train})
 
-current_w, current_b, current_loss = sess.run([w, b, loss], feed_dict={x: x_train, y: y_train})
+current_w = sess.run(w)
+current_b = sess.run(b)
+current_loss = sess.run(loss, feed_dict={x: x_train, y: y_train})
 print("w: ", current_w, "  b: ", current_b, " loss: ", current_loss)
