@@ -2,7 +2,7 @@ import tensorflow as tf
 import cifar10
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('train_dir', 'cifar10_train')
+tf.app.flags.DEFINE_string('train_dir', 'cifar10_train', """Path to store the train log.""")
 
 
 def main(argv=None):
