@@ -2,6 +2,10 @@ import os
 import tensorflow as tf
 
 
+def read_cifar10(filename_queue):
+    pass
+
+
 def distored_inputs(data_dir, batch_size):
     filenames = [os.path.join(data_dir, 'data_batch_%d.bin') for x in range(1, 6)]
     for f in filenames:
