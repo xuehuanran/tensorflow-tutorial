@@ -3,3 +3,4 @@ mnist_data/
 cifar10_data/
 cifar10_train/
 __pycache__
+.DS_Store
