@@ -20,7 +20,7 @@ def max_pool_2x2(input_x):
     return tf.nn.max_pool(input_x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
 
-mnist = read_data_sets('mnist_data', one_hot=True)
+mnist = read_data_sets('../dataset/mnist', one_hot=True)
 
 session = tf.InteractiveSession()
 
