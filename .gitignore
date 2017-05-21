@@ -1,7 +1,1 @@
-.idea
-mnist_data/
-dataset/
-cifar10_data/
-cifar10_train/
-__pycache__
-.DS_Store
+.idea/
