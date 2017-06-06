@@ -2,6 +2,7 @@ import tensorflow as tf
 import os
 import sys
 import tarfile
+import cifar10_input
 
 from urllib.request import urlretrieve
 
@@ -32,4 +33,14 @@ def maybe_download_and_extract():
     extracted_dir_path = os.path.join(dest_directory, 'cifar-10-batches-bin')
     if not os.path.exists(extracted_dir_path):
         tarfile.open(filepath, 'r:gz').extractall(dest_directory)
+
+
+def distorted_inputs():
+    data_dir = os.path.join(FLAGS.data_dir, 'cifar-10-batches-bin')
+    images, labels = cifar10_input.distorted_inputs(data_dir=data_dir, batch_size=FLAGS.batch_size)
+    if FLAGS.use_fp16:
+        images = tf.cast(images, tf.float16)
+        labels = tf.cast(labels, tf.float16)
+    return images, labels
+
 
