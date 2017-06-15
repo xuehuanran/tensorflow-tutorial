@@ -1,2 +1,3 @@
 .idea/
 cifar10/
+tensorboard/log/

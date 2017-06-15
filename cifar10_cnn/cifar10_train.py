@@ -8,9 +8,10 @@ tf.app.flags.DEFINE_string('train_dir', 'train_log', """Directory where to write
 
 def train():
     with tf.Graph().as_default():
+        sess = tf.InteractiveSession()
         global_step = tf.contrib.framework.get_or_create_global_step()
         images, labels = cifar10.distorted_inputs()
-
+        print(labels)
 
 def main(_):
     cifar10.maybe_download_and_extract()

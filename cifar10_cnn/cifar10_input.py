@@ -5,6 +5,9 @@ from six.moves import xrange
 
 IMAGE_SIZE = 24
 
+NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 50000
+NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 10000
+
 
 def read_cifar10(filename_queue):
     class CIFAR10Record(object):
@@ -33,6 +36,24 @@ def read_cifar10(filename_queue):
     return result
 
 
+def _generate_image_and_label_batch(image, label, min_queue_examples, batch_size, shuffle):
+    num_preprocess_threads = 16
+    if shuffle:
+        images, label_batch = tf.train.shuffle_batch(tensors=[image, label],
+                                                     batch_size=batch_size,
+                                                     num_threads=num_preprocess_threads,
+                                                     capacity=min_queue_examples + 3 * batch_size,
+                                                     min_after_dequeue=min_queue_examples)
+    else:
+        images, label_batch = tf.train.batch(tensors=[image, label],
+                                             batch_size=batch_size,
+                                             num_threads=num_preprocess_threads,
+                                             capacity=min_queue_examples + 3 * batch_size)
+    tf.summary.image('images', images)
+
+    return images, tf.reshape(label_batch, [batch_size])
+
+
 def distorted_inputs(data_dir, batch_size):
     # the performance of xrange is better than range
     filenames = [os.path.join(data_dir, 'data_batch_%d.bin' % i) for i in xrange(1, 6)]
@@ -48,5 +69,17 @@ def distorted_inputs(data_dir, batch_size):
     width = IMAGE_SIZE
 
     distorted_image = tf.random_crop(reshaped_image, [height, width, 3])
+    distorted_image = tf.image.random_flip_up_down(distorted_image)
 
-    return 'test_images', 'test_labels'
+    float_image = tf.image.per_image_standardization(distorted_image)
+    float_image.set_shape([height, width, 3])
+    read_input.label.set_shape([1])
+
+    min_fraction_of_examples_in_queue = 0.4
+    min_queue_examples = int(NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN * min_fraction_of_examples_in_queue)
+
+    print('Filling queue with %d CIFAR images before starting to train, and this will take a few '
+          'minutes. ' % min_queue_examples)
+
+    return _generate_image_and_label_batch(float_image, read_input.label, min_queue_examples, batch_size,
+                                           True)
