@@ -33,6 +33,8 @@ def read_cifar10(filename_queue):
 
     result.uint8_image = tf.transpose(depth_major, [1, 2, 0])
 
+    print(depth_major)
+
     return result
 
 

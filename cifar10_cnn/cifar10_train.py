@@ -11,7 +11,8 @@ def train():
         sess = tf.InteractiveSession()
         global_step = tf.contrib.framework.get_or_create_global_step()
         images, labels = cifar10.distorted_inputs()
-        print(labels)
+        logits = cifar10.inference(images)
+
 
 def main(_):
     cifar10.maybe_download_and_extract()
